@@ -17,19 +17,30 @@ const Feedback = ({ good, neutral, bad }) => {
   )
 }
 
-const StatisticsLine = ({ value, text, unit = "" }) => <p>{text} {value}{unit}</p>
+const StatisticsLine = ({ value, text, unit = "" }) => {
+  return (
+    <tr>
+      <td>{text}</td>
+      <td>{value}{unit}</td>
+    </tr>
+  )
+}
 
 const Statistics = ({ good, neutral, bad, total, average, positive }) => {
   if (total) {
     return (
       <div>
         <h1>Statistiikka</h1>
-        <StatisticsLine value={good} text="Hyvä" />
-        <StatisticsLine value={neutral} text="Neutraali" />
-        <StatisticsLine value={bad} text="Huono" />
-        <StatisticsLine value={total} text="Yhteensä" />
-        <StatisticsLine value={average} text="Keskiarvo" />
-        <StatisticsLine value={positive} text="Positiivisuus" unit="%" />
+        <table>
+          <tbody>
+            <StatisticsLine value={good} text="Hyvä" />
+            <StatisticsLine value={neutral} text="Neutraali" />
+            <StatisticsLine value={bad} text="Huono" />
+            <StatisticsLine value={total} text="Yhteensä" />
+            <StatisticsLine value={average} text="Keskiarvo" />
+            <StatisticsLine value={positive} text="Positiivisuus" unit="%" />
+          </tbody>
+        </table>
       </div>
     )
   }

@@ -6,13 +6,27 @@ const Button = ({ handleClick, text }) => {
   )
 }
 
-const Feedback = ({ Good, Neutral, Bad }) => {
+const Feedback = ({ good, neutral, bad }) => {
   return (
     <div>
       <h1>Anna palautetta</h1>
-      <Button handleClick={Good} text="Hyvä" />
-      <Button handleClick={Neutral} text="Neutraali" />
-      <Button handleClick={Bad} text="Huono" />
+      <Button handleClick={good} text="Hyvä" />
+      <Button handleClick={neutral} text="Neutraali" />
+      <Button handleClick={bad} text="Huono" />
+    </div>
+  )
+}
+
+const Statistics = ({ good, neutral, bad, total, average, positive }) => {
+  return (
+    <div>
+      <h1>Statistiikka</h1>
+      <p>Hyvä {good}</p>
+      <p>Neutraali {neutral}</p>
+      <p>Huono {bad}</p>
+      <p>Yhteensä {total}</p>
+      <p>Keskiarvo {average}</p>
+      <p>Positiivisuus {positive}%</p>
     </div>
   )
 }
@@ -55,14 +69,8 @@ const App = () => {
 
   return (
     <div>
-      <Feedback Good={incrementGood} Neutral={incrementNeutral} Bad={incrementBad} />
-      <h1>Statistiikka</h1>
-      <p>Hyvä {good}</p>
-      <p>Neutraali {neutral}</p>
-      <p>Huono {bad}</p>
-      <p>Yhteensä {total}</p>
-      <p>Keskiarvo {average}</p>
-      <p>Positiivisuus {positive}%</p>
+      <Feedback good={incrementGood} neutral={incrementNeutral} bad={incrementBad} />
+      <Statistics good={good} neutral={neutral} bad={bad} total={total} average={average} positive={positive} />
     </div>
   );
 }

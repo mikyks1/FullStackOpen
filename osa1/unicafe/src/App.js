@@ -21,10 +21,37 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
+  const [total, setTotal] = useState(0)
+  const [average, setAverage] = useState(0)
+  const [positive, setPositive] = useState(0)
 
-  const incrementGood = () => setGood(good + 1)
-  const incrementNeutral = () => setNeutral(neutral + 1)
-  const incrementBad = () => setBad(bad + 1)
+  const incrementGood = () => {
+    const newGood = good + 1
+    const newTotal = newGood + neutral + bad
+    setGood(newGood)
+    setTotal(newTotal)
+    setAverage(getAverage({ g: newGood, t: newTotal }))
+    setPositive(getPositive({ g: newGood, t: newTotal }))
+  }
+  const incrementNeutral = () => {
+    const newNeutral = neutral + 1
+    const newTotal = good + newNeutral + bad
+    setNeutral(newNeutral)
+    setTotal(newTotal)
+    setAverage(getAverage({ t: newTotal }))
+    setPositive(getPositive({ t: newTotal }))
+  }
+  const incrementBad = () => {
+    const newBad = bad + 1
+    const newTotal = good + neutral + newBad
+    setBad(newBad)
+    setTotal(newTotal)
+    setAverage(getAverage({ b: newBad, t: newTotal }))
+    setPositive(getPositive({ t: newTotal }))
+  }
+
+  const getAverage = ({ g = good, b = bad, t = total }) => ((g - b) / t).toFixed(2)
+  const getPositive = ({ g = good, t = total }) => (g / t * 100).toFixed(2)
 
   return (
     <div>
@@ -33,6 +60,9 @@ const App = () => {
       <p>Hyvä {good}</p>
       <p>Neutraali {neutral}</p>
       <p>Huono {bad}</p>
+      <p>Yhteensä {total}</p>
+      <p>Keskiarvo {average}</p>
+      <p>Positiivisuus {positive}%</p>
     </div>
   );
 }

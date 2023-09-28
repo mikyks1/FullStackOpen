@@ -50,6 +50,14 @@ const App = () => {
     }
   }
 
+  const removePerson = (id, name) => {
+    if (window.confirm(`Do you want to delete ${name}`)) {
+      personService
+        .remove(id)
+        .then(() => setPersons(persons.filter(person => person.id !== id)))
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -58,7 +66,7 @@ const App = () => {
       <AddPerson onSubmit={addPerson} name={newName} nameChange={handleNameChange}
         number={newNumber} numberChange={handleNumberChange}></AddPerson>
       <h3>Numbers</h3>
-      <Persons persons={persons} filter={filter}></Persons>
+      <Persons persons={persons} filter={filter} remove={removePerson}></Persons>
     </div>
   )
 

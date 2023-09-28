@@ -3,6 +3,7 @@ import Persons from './components/Persons'
 import AddPerson from './components/AddPerson'
 import Filter from './components/Filter'
 import axios from "axios"
+import personService from "./services/persons"
 
 
 const App = () => {
@@ -12,9 +13,9 @@ const App = () => {
   const [filter, setNewFilter] = useState("")
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then(response => setPersons(response.data))
+    personService
+      .getAll()
+      .then(personsServer => setPersons(personsServer))
   }, [])
 
   const handleNameChange = (event) => {
@@ -39,10 +40,10 @@ const App = () => {
         number: newNumber
       }
 
-      axios
-        .post("http://localhost:3001/persons", personObject)
-        .then(response => {
-          setPersons(persons.concat(response.data))
+      personService
+        .add(personObject)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
           setNewName("")
           setNewNumber("")
         })

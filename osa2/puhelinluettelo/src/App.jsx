@@ -21,27 +21,37 @@ const App = () => {
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
+
   const handleNumberChange = (event) => {
     setNewNumber(event.target.value)
   }
+
   const handleFilterChange = (event) => {
     setNewFilter(event.target.value)
   }
+
   const addPerson = (event) => {
     event.preventDefault()
 
-    if (persons.some(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
+    const newPersonObject = {
+      name: newName,
+      number: newNumber
     }
+    const currentPersonObject = persons.find(person => person.name === newName)
 
-    else {
-      const personObject = {
-        name: newName,
-        number: newNumber
+    if (currentPersonObject) {
+      if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const id = currentPersonObject.id
+        personService
+          .update(id, newPersonObject)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+          })
       }
-
+    }
+    else {
       personService
-        .add(personObject)
+        .add(newPersonObject)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
           setNewName("")

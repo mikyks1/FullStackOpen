@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import Persons from './components/Persons'
 import AddPerson from './components/AddPerson'
 import Filter from './components/Filter'
-import axios from "axios"
 import personService from "./services/persons"
+import Notification from './components/Notification'
 
 
 const App = () => {
@@ -11,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState("")
   const [filter, setNewFilter] = useState("")
+  const [notification, setNewNotification] = useState(null)
 
   useEffect(() => {
     personService
@@ -47,6 +48,8 @@ const App = () => {
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
           })
+        setNewNotification(`Updated ${newName}`)
+        setTimeout(() => setNewNotification(null), 5000)
       }
     }
     else {
@@ -57,6 +60,9 @@ const App = () => {
           setNewName("")
           setNewNumber("")
         })
+
+      setNewNotification(`Added ${newName}`)
+      setTimeout(() => setNewNotification(null), 5000)
     }
   }
 
@@ -65,12 +71,15 @@ const App = () => {
       personService
         .remove(id)
         .then(() => setPersons(persons.filter(person => person.id !== id)))
+      setNewNotification(`Deleted ${name}`)
+      setTimeout(() => setNewNotification(null), 5000)
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification notification={notification} />
       <Filter filter={filter} filterChange={handleFilterChange}></Filter>
       <h3>Add a new</h3>
       <AddPerson onSubmit={addPerson} name={newName} nameChange={handleNameChange}

@@ -12,6 +12,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("")
   const [filter, setNewFilter] = useState("")
   const [notification, setNewNotification] = useState(null)
+  const [errorStatus, setNewErrorStatus] = useState(false)
 
   useEffect(() => {
     personService
@@ -47,9 +48,18 @@ const App = () => {
           .update(id, newPersonObject)
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+            setNewNotification(`Updated ${newName}`)
           })
-        setNewNotification(`Updated ${newName}`)
-        setTimeout(() => setNewNotification(null), 5000)
+          .catch(error => {
+            setNewNotification(`${newName} has been removed from the server. Cannot be updated`)
+            setPersons(persons.filter(person => person !== currentPersonObject))
+            setNewErrorStatus(true)
+          })
+
+        setTimeout(() => {
+          setNewNotification(null)
+          setNewErrorStatus(false)
+        }, 7000)
       }
     }
     else {
@@ -62,7 +72,7 @@ const App = () => {
         })
 
       setNewNotification(`Added ${newName}`)
-      setTimeout(() => setNewNotification(null), 5000)
+      setTimeout(() => setNewNotification(null), 7000)
     }
   }
 
@@ -70,16 +80,26 @@ const App = () => {
     if (window.confirm(`Do you want to delete ${name}`)) {
       personService
         .remove(id)
-        .then(() => setPersons(persons.filter(person => person.id !== id)))
-      setNewNotification(`Deleted ${name}`)
-      setTimeout(() => setNewNotification(null), 5000)
+        .then(() => {
+          setNewNotification(`Deleted ${name}`)
+        })
+        .catch(error => {
+          setNewNotification(`${name} has already been deleted`)
+          setNewErrorStatus(true)
+        })
+
+      setPersons(persons.filter(person => person.id !== id))
+      setTimeout(() => {
+        setNewNotification(null)
+        setNewErrorStatus(false)
+      }, 7000)
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification notification={notification} />
+      <Notification notification={notification} error={errorStatus} />
       <Filter filter={filter} filterChange={handleFilterChange}></Filter>
       <h3>Add a new</h3>
       <AddPerson onSubmit={addPerson} name={newName} nameChange={handleNameChange}

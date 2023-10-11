@@ -1,6 +1,7 @@
 import Country from "./country"
+import ListedCountry from "./listedCountry"
 
-const Countries = ({ countries, filter }) => {
+const Countries = ({ countries, filter, handler }) => {
     const filteredCountries = filter
         ? countries.filter(country =>
             country.name.official.toLowerCase().includes(filter.toLowerCase()))
@@ -19,7 +20,7 @@ const Countries = ({ countries, filter }) => {
     if (length > 1)
         return (
             <div>
-                {filteredCountries.map(country => <div key={country.name.common}>{country.name.common}</div>)}
+                {filteredCountries.map(country => <ListedCountry key={country.name.common} country={country} handler={handler} />)}
             </div>
         )
 

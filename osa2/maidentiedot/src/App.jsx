@@ -18,10 +18,14 @@ const App = () => {
     setNewFilter(event.target.value)
   }
 
+  const fillSearch = (country) => {
+    setNewFilter(country)
+  }
+
   return (
     <>
       <Filter filter={filter} handler={handleFilterChange}></Filter>
-      <Countries countries={countries} filter={filter}></Countries>
+      <Countries countries={countries} filter={filter} handler={fillSearch}></Countries>
     </>
   )
 }

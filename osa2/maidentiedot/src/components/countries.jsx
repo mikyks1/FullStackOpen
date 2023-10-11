@@ -3,11 +3,9 @@ import ListedCountry from "./listedCountry"
 
 const Countries = ({ countries, filter, handler }) => {
     const filteredCountries = filter
-        ? countries.filter(country =>
-            country.name.official.toLowerCase().includes(filter.toLowerCase()))
+        ? countries.filter(country => country.name.official.toLowerCase().includes(filter.toLowerCase()))
         : countries
 
-    //console.log(filteredCountries)
     const length = filteredCountries.length
     if (length > 10) {
         return (

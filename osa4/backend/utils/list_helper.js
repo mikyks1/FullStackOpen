@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 
+const lodash = require("lodash")
+
 const dummy = (blogs) => {
   return 1
 }
@@ -19,4 +21,16 @@ const favouriteBlog = (blogs) => {
   return favourite
 }
 
-module.exports = { dummy, totalLikes, favouriteBlog }
+const mostBlogs = (blogs) => {
+  if (blogs.length === 0) return undefined
+
+  const groupedByAuthor = lodash.groupBy(blogs, "author")
+  const mostBlogs = lodash.orderBy(groupedByAuthor, (group => group.length), ["desc"])[0]
+
+  return {
+    "author": mostBlogs[0].author,
+    "blogs": mostBlogs.length
+  }
+}
+
+module.exports = { dummy, totalLikes, favouriteBlog, mostBlogs }

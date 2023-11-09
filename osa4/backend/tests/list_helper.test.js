@@ -86,4 +86,26 @@ describe("Most liked blog", () => {
   test("of a larger list is found correctly", () => {
     expect(listHelper.favouriteBlog(blogs)).toEqual(blogs[2])
   })
+
+  describe("Most blogs", () => {
+    test("of an empty list is undefined", () => {
+      expect(listHelper.mostBlogs([])).toEqual(undefined)
+    })
+
+    test("of a list with a single blog/author equals that author", () => {
+      expect(listHelper.mostBlogs([blogs[0]]))
+        .toEqual({
+          "author": "Michael Chan",
+          "blogs": 1
+        })
+    })
+
+    test("of a larger list is found correctly", () => {
+      expect(listHelper.mostBlogs(blogs))
+        .toEqual({
+          "author": "Robert C. Martin",
+          "blogs": 3
+        })
+    })
+  })
 })

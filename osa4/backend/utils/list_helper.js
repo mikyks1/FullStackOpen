@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-const lodash = require("lodash")
+const _ = require("lodash")
 
 const dummy = (blogs) => {
   return 1
@@ -24,8 +24,8 @@ const favouriteBlog = (blogs) => {
 const mostBlogs = (blogs) => {
   if (blogs.length === 0) return undefined
 
-  const groupedByAuthor = lodash.groupBy(blogs, "author")
-  const mostBlogs = lodash.orderBy(groupedByAuthor, (group => group.length), ["desc"])[0]
+  const groupedByAuthor = _.groupBy(blogs, "author")
+  const mostBlogs = _.orderBy(groupedByAuthor, (group => group.length), ["desc"])[0]
 
   return {
     "author": mostBlogs[0].author,
@@ -33,4 +33,19 @@ const mostBlogs = (blogs) => {
   }
 }
 
-module.exports = { dummy, totalLikes, favouriteBlog, mostBlogs }
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) return undefined
+
+  const reducer = (group) => _.reduce(group, (sum, blog) => sum + blog.likes, 0)
+
+  const groupedByAuthor = _.groupBy(blogs, "author")
+  const summedLikes = _.mapValues(groupedByAuthor, reducer)
+  const mostLikes = _.orderBy(_.toPairs(summedLikes), 1, ["desc"])[0]
+
+  return {
+    "author": mostLikes[0],
+    "likes": mostLikes[1]
+  }
+}
+
+module.exports = { dummy, totalLikes, favouriteBlog, mostBlogs, mostLikes }

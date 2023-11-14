@@ -67,6 +67,27 @@ test("Blogs have an id property", async () => {
   expect(response.body[0].id).toBeDefined()
 })
 
+test("Blog is added correctly", async () => {
+  const newBlog = {
+    title: "Mun blogi",
+    author: "Erkki Esimerkki",
+    url: "url",
+    likes: 0
+  }
+
+  const response = await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/)
+
+  delete response.body.id
+  expect(response.body).toEqual(newBlog)
+
+  const blogs = await Blog.find({})
+  expect(blogs).toHaveLength(initialBlogs.length + 1)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })

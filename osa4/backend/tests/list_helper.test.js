@@ -75,7 +75,7 @@ describe("total likes", () => {
 
 describe("Most liked blog", () => {
   test("of an empty list is undefined", () => {
-    expect(listHelper.favouriteBlog([])).toEqual(undefined)
+    expect(listHelper.favouriteBlog([])).toBeUndefined()
   })
 
   test("of a list with a single blog equals that blog", () => {
@@ -90,7 +90,7 @@ describe("Most liked blog", () => {
 
 describe("Most blogs", () => {
   test("of an empty list is undefined", () => {
-    expect(listHelper.mostBlogs([])).toEqual(undefined)
+    expect(listHelper.mostBlogs([])).toBeUndefined()
   })
 
   test("of a list with a single blog/author equals that author", () => {
@@ -112,7 +112,7 @@ describe("Most blogs", () => {
 
 describe("Most liked author", () => {
   test("of an empty list is undefined", () => {
-    expect(listHelper.mostLikes([])).toEqual(undefined)
+    expect(listHelper.mostLikes([])).toBeUndefined()
   })
 
   test("of a list with a single blog/author equals that author", () => {

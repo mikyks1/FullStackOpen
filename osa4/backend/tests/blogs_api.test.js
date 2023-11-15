@@ -156,6 +156,35 @@ describe("Delete tests", () => {
   })
 })
 
+describe("Put tests", () => {
+  test("amount of likes is updated", async () => {
+    const newBlog = {
+      title: "Mun blogi",
+      author: "Erkki Esimerkki",
+      url: "url",
+      likes: 0
+    }
+    const response = await api
+      .post("/api/blogs")
+      .send(newBlog)
+
+    const updatedBlog = await api
+      .put(`/api/blogs/${response.body.id}`)
+      .send({ likes: 4 })
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+
+    expect(updatedBlog.body.likes).toEqual(4)
+  })
+
+  test("updating nonexistent id returns 404", async () => {
+    await api
+      .put("/api/blogs/0")
+      .send({ likes: 1 })
+      .expect(404)
+  })
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })

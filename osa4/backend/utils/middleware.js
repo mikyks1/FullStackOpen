@@ -5,7 +5,10 @@ const errorHandler = (error, req, res, next) => {
 
   if (error.name === "ValidationError") {
     return res.status(400).json({ errorName: error.name, errorMessage: error.message })
+  } else if (error.name === "CastError") {
+    return res.status(404).json({ error: error.message })
   }
+
 
   next(error)
 }

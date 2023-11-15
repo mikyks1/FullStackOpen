@@ -48,95 +48,112 @@ beforeEach(async () => {
   await Blog.insertMany(initialBlogs)
 })
 
-test("Blogs are returned as json", async () => {
-  await api
-    .get("/api/blogs")
-    .expect(200)
-    .expect("Content-Type", /application\/json/)
+describe("Get tests", () => {
+  test("Blogs are returned as json", async () => {
+    await api
+      .get("/api/blogs")
+      .expect(200)
+      .expect("Content-Type", /application\/json/)
+  })
+
+  test("All blogs are returned", async () => {
+    const response = await api.get("/api/blogs")
+
+    expect(response.body).toHaveLength(initialBlogs.length)
+  })
+
+  test("Blogs have an id property", async () => {
+    const response = await api.get("/api/blogs")
+
+    expect(response.body[0].id).toBeDefined()
+  })
 })
 
-test("All blogs are returned", async () => {
-  const response = await api.get("/api/blogs")
+describe("Post tests", () => {
+  test("Blog is added correctly", async () => {
+    const newBlog = {
+      title: "Mun blogi",
+      author: "Erkki Esimerkki",
+      url: "url",
+      likes: 0
+    }
 
-  expect(response.body).toHaveLength(initialBlogs.length)
+    const response = await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/)
+
+    delete response.body.id
+    expect(response.body).toEqual(newBlog)
+
+    const blogs = await Blog.find({})
+    expect(blogs).toHaveLength(initialBlogs.length + 1)
+  })
+
+  test("If likes property is not given, it defaults to 0", async () => {
+    const newBlog = {
+      title: "Mun blogi",
+      author: "Erkki Esimerkki",
+      url: "url"
+    }
+
+    const response = await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/)
+
+    expect(response.body.likes).toBeDefined()
+    expect(response.body.likes).toEqual(0)
+  })
+
+  test("Title and url properties are required", async () => {
+    const noTitle = {
+      author: "Erkki Esimerkki",
+      url: "url",
+      likes: 0
+    }
+
+    const noUrl = {
+      title: "Mun blogi",
+      author: "Erkki Esimerkki",
+      likes: 0
+    }
+
+    const noTitleOrUrl = {
+      author: "Erkki Esimerkki",
+      likes: 0
+    }
+
+    await api
+      .post("/api/blogs")
+      .send(noTitle)
+      .expect(400)
+
+    await api
+      .post("/api/blogs")
+      .send(noUrl)
+      .expect(400)
+
+    await api
+      .post("/api/blogs")
+      .send(noTitleOrUrl)
+      .expect(400)
+  })
 })
 
-test("Blogs have an id property", async () => {
-  const response = await api.get("/api/blogs")
+describe("Delete tests", () => {
+  test("A specific blog can be deleted", async () => {
+    let blogs = await Blog.find({})
 
-  expect(response.body[0].id).toBeDefined()
-})
+    await api
+      .delete(`/api/blogs/${blogs[0].id}`)
+      .expect(204)
 
-test("Blog is added correctly", async () => {
-  const newBlog = {
-    title: "Mun blogi",
-    author: "Erkki Esimerkki",
-    url: "url",
-    likes: 0
-  }
-
-  const response = await api
-    .post("/api/blogs")
-    .send(newBlog)
-    .expect(201)
-    .expect("Content-Type", /application\/json/)
-
-  delete response.body.id
-  expect(response.body).toEqual(newBlog)
-
-  const blogs = await Blog.find({})
-  expect(blogs).toHaveLength(initialBlogs.length + 1)
-})
-
-test("If likes property is not given, it defaults to 0", async () => {
-  const newBlog = {
-    title: "Mun blogi",
-    author: "Erkki Esimerkki",
-    url: "url"
-  }
-
-  const response = await api
-    .post("/api/blogs")
-    .send(newBlog)
-    .expect(201)
-    .expect("Content-Type", /application\/json/)
-
-  expect(response.body.likes).toBeDefined()
-  expect(response.body.likes).toEqual(0)
-})
-
-test("Title and url properties are required", async () => {
-  const noTitle = {
-    author: "Erkki Esimerkki",
-    url: "url",
-    likes: 0
-  }
-
-  const noUrl = {
-    title: "Mun blogi",
-    author: "Erkki Esimerkki",
-    likes: 0
-  }
-
-  const noTitleOrUrl = {
-    author: "Erkki Esimerkki",
-    likes: 0
-  }
-
-  await api
-    .post("/api/blogs")
-    .send(noTitle)
-    .expect(400)
-
-  await api
-    .post("/api/blogs")
-    .send(noUrl)
-    .expect(400)
-
-  await api
-    .post("/api/blogs")
-    .send(noTitleOrUrl)
-    .expect(400)
+    blogs = await Blog.find({})
+    expect(blogs).toHaveLength(initialBlogs.length - 1)
+  })
 })
 
 afterAll(async () => {

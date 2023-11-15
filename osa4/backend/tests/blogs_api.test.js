@@ -105,6 +105,40 @@ test("If likes property is not given, it defaults to 0", async () => {
   expect(response.body.likes).toEqual(0)
 })
 
+test("Title and url properties are required", async () => {
+  const noTitle = {
+    author: "Erkki Esimerkki",
+    url: "url",
+    likes: 0
+  }
+
+  const noUrl = {
+    title: "Mun blogi",
+    author: "Erkki Esimerkki",
+    likes: 0
+  }
+
+  const noTitleOrUrl = {
+    author: "Erkki Esimerkki",
+    likes: 0
+  }
+
+  await api
+    .post("/api/blogs")
+    .send(noTitle)
+    .expect(400)
+
+  await api
+    .post("/api/blogs")
+    .send(noUrl)
+    .expect(400)
+
+  await api
+    .post("/api/blogs")
+    .send(noTitleOrUrl)
+    .expect(400)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })

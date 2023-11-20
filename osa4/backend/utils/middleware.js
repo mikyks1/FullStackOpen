@@ -7,6 +7,8 @@ const errorHandler = (error, req, res, next) => {
     return res.status(400).json({ errorName: error.name, errorMessage: error.message })
   } else if (error.name === "CastError") {
     return res.status(404).json({ error: error.message })
+  } else if (error.name === "JsonWebTokenError") {
+    return res.status(400).json({ error: "token missing or invalid" })
   }
 
 

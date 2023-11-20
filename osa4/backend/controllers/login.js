@@ -6,6 +6,10 @@ const User = require("../models/user")
 loginRouter.post("/", async (req, res) => {
   const { username, password } = req.body
 
+  if (!(username && password)) {
+    return res.status(400).json({ error: "username or password was not given" })
+  }
+
   const user = await User.findOne({ username })
   const passwordCorrect = user === null
     ? false

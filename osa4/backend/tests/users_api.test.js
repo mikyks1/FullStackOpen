@@ -8,17 +8,17 @@ const initialUsers = [
   {
     username: "testi",
     name: "testi",
-    password: "salasana"
+    passwordHash: "$2b$10$S0y3hF6WGeaKiveUFuBO1.AWfoxTB4sHlFF/5BRY0js00YJpvaRMm"
   },
   {
     username: "testi2",
     name: "testi2",
-    password: "salasana"
+    passwordHash: "$2b$10$XLJo1PgkNc.yUs8GR5TEwODScalE0KcKpq5tbZyo0VmZdsk5RDFtC"
   },
   {
     username: "Erkki",
     name: "Erkki Esimerkki",
-    password: "123456789"
+    passwordHash: "$2b$10$H8toNkm7Ec6xoynpkJ3LWOHQuTYp9c7z7ShG2I7zf/pDgdGll5CmW"
   }
 ]
 
@@ -100,12 +100,12 @@ describe("Post tests", () => {
     }
 
     await api
-      .post("/api/blogs")
+      .post("/api/users")
       .send(noUsername)
       .expect(400)
 
     await api
-      .post("/api/blogs")
+      .post("/api/users")
       .send(noPassword)
       .expect(400)
 
